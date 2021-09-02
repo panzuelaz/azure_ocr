@@ -1,2 +1,5 @@
+azure-cognitiveservices-vision-computervision
+pillow
 mysql-connector-python
 schedule
+python-dotenv
