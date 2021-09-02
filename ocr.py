@@ -100,11 +100,11 @@ def connect_mysql(host, db, user, password, port):
         connection = mysql.connector.connect(host=host, database=db, user=user, password=password, port=port)
         if connection.is_connected():
             print("Connected to MySQL")
-            logging.info("Connected to MySQL")
+            # logging.info("Connected to MySQL")
             return connection
     except NameError as e:
         print("Error while connecting to MySQL", e)
-        logging.error("Error while connecting to MySQL", e)
+        # logging.error("Error while connecting to MySQL", e)
 
 
 def get_eval():
@@ -121,7 +121,7 @@ def get_eval():
         db_cursor = connection.cursor()
         db_cursor.execute(query_file)
         myresult = db_cursor.fetchall()
-        logging.info(myresult)
+        # logging.info(myresult)
         return myresult
 
 
@@ -165,7 +165,7 @@ def update_preprocess(id):
     db_cursor = connection.cursor()
     db_cursor.execute(query_file)
     connection.commit()
-    logging.info("Query pre-process updated!")
+    # logging.info("Query pre-process updated!")
     print("Query pre-process updated!")
 
 
@@ -195,8 +195,8 @@ def autoverif_log(id, odo_result, odo_raw, odo_match, plate_result, plate_match,
         connection.commit()
         print("LOG TO DB: {}".format(query_file))
         print("Query all results updated!")
-        logging.info("LOG TO DB: {}".format(query_file))
-        logging.info("Query all results updated!")
+        # logging.info("LOG TO DB: {}".format(query_file))
+        # logging.info("Query all results updated!")
 
         # Update OCR Verified when both ODO and Plate are suceeded
         if match_odo and match_plate:
@@ -216,7 +216,7 @@ def update_ocr_verifAt(id):
     db_cursor = connection.cursor()
     db_cursor.execute(query_file)
     connection.commit()
-    logging.info("OCR VERIFIED AT: Query all results updated!")
+    # logging.info("OCR VERIFIED AT: Query all results updated!")
     print("OCR VERIFIED AT: Query all results updated!")
 
     
