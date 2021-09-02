@@ -404,12 +404,12 @@ def extract_data(id, odo, photo_id, i_url, plate):
                 # print("PRE-PROCESS UPDATED!")
                 print("Raw result: ", end="")
 
-                for line in text_result.lines:
-                    line_str = str(line.text) # line_str can use to update raw result
-                    # print(line_str)
-
-                    # ODOMETER
-                    if photo_id == 1:
+                # ODOMETER
+                if photo_id == 1:
+                    odo_finish = True
+                    for line in text_result.lines:
+                        line_str = str(line.text) # line_str can use to update raw result
+                        # print(line_str)
                         raw_odo += line_str
                         print(raw_odo)
                         # Remove non-alphanumeric char
@@ -418,7 +418,6 @@ def extract_data(id, odo, photo_id, i_url, plate):
                         # print('Extracted: ', end="")
                         # print(extract_line_odo)
                         odo = odo.replace(' ','')
-                        odo_finish = True
 
                         if extract_line_odo.isalnum() and len(extract_line_odo) >= 4:
                             extract_line_odo = re.findall("\d+", extract_line_odo)  # extract_line_odo can use as matched result
@@ -437,8 +436,10 @@ def extract_data(id, odo, photo_id, i_url, plate):
                                 odo_json = True # use this line to update database
                                 break
 
-                    # PLATE NUMBER
-                    if photo_id == 2:
+                # PLATE NUMBER
+                if photo_id == 2:
+                    for line in text_result.lines:
+                        line_str = str(line.text) # line_str can use to update raw result
                         raw_plate += line_str
                         print(raw_plate)
                         # Remove non-alphanumeric char
@@ -499,10 +500,11 @@ def extract_data(id, odo, photo_id, i_url, plate):
 
 
 if __name__ == "__main__":
-    schedule.every(1).minutes.do(ocr_process)
-    while True:
-        print("Waiting for next schedule..")
-        schedule.run_pending()
-        time.sleep(1)
+    # schedule.every(1).minutes.do(ocr_process)
+    # while True:
+    #     print("Waiting for next schedule..")
+    #     schedule.run_pending()
+    #     time.sleep(1)
 
     # print(get_eval())
+    ocr_process()
