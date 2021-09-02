@@ -189,18 +189,18 @@ def autoverif_log(id, odo_result, odo_raw, odo_match, plate_result, plate_match,
                         (%s,%s,%s,%s,%s,%s,%s, now(), now());
                         """ %(id, result_odo, raw_odo, match_odo, result_plate, match_plate, raw_plate)
 
-        connection = connect_mysql(mysql_host, mysql_db_cron, mysql_user, mysql_password, mysql_port)
-        db_cursor = connection.cursor()
-        db_cursor.execute(query_file)
-        connection.commit()
+        # connection = connect_mysql(mysql_host, mysql_db_cron, mysql_user, mysql_password, mysql_port)
+        # db_cursor = connection.cursor()
+        # db_cursor.execute(query_file)
+        # connection.commit()
         print("LOG TO DB: {}".format(query_file))
         print("Query all results updated!")
         # logging.info("LOG TO DB: {}".format(query_file))
         # logging.info("Query all results updated!")
 
         # Update OCR Verified when both ODO and Plate are suceeded
-        if match_odo and match_plate:
-            update_ocr_verifAt(id)
+        # if match_odo and match_plate:
+        #     update_ocr_verifAt(id)
 
 
 def update_ocr_verifAt(id):
@@ -399,9 +399,9 @@ def extract_data(id, odo, photo_id, i_url, plate):
             for text_result in read_result.analyze_result.read_results:
                 # Put sql command to update table here
                 datenow = datetime.datetime.now()
-                print("Update to ocr systemProcessedAt: %s" % (datenow))
-                update_preprocess(id)
-                print("PRE-PROCESS UPDATED!")
+                # print("Update to ocr systemProcessedAt: %s" % (datenow))
+                # update_preprocess(id)
+                # print("PRE-PROCESS UPDATED!")
                 print("Raw result: ", end="")
 
                 for line in text_result.lines:
