@@ -506,5 +506,5 @@ if __name__ == "__main__":
     #     schedule.run_pending()
     #     time.sleep(1)
 
-    # print(get_eval())
-    ocr_process()
+    print(get_eval())
+    # ocr_process()

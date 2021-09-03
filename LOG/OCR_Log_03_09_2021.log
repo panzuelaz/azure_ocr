@@ -1,0 +1,4 @@
+09:28:44,705 mysql.connector.connection DEBUG new_auth_plugin: mysql_native_password
+09:29:05,225 mysql.connector.connection DEBUG new_auth_plugin: mysql_native_password
+09:29:36,752 mysql.connector.connection DEBUG new_auth_plugin: mysql_native_password
+09:30:37,751 mysql.connector.connection DEBUG new_auth_plugin: mysql_native_password
