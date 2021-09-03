@@ -89,7 +89,7 @@ logging.basicConfig(filename=logname,
                             filemode='a',
                             format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                             datefmt='%H:%M:%S',
-                            level=logging.DEBUG)
+                            level=logging.INFO)
 
 
 def connect_mysql(host, db, user, password, port):
@@ -277,6 +277,7 @@ def ocr_process():
     """
     # timer_start = time.time()
 
+    # for eval in enumerate(get_eval()):
     for eval in get_eval():
         id = eval[0]
         odo = eval[1]
@@ -321,16 +322,16 @@ def ocr_process():
                         for vehicle_plate in get_vehicle_plate(id):
                             plate = vehicle_plate[0]
 
-                            print("\nID: %s" %(id))
+                            print("ID: %s" %(id))
                             print("ODO: %s" %(odo))
                             print("Photo ID: %s" %(photo_id))
                             print("Image URL: %s" %(i_url))
                             print("Plate Number: %s\n" %(plate))
-                            logging.info("\nID: %s" %(id))
+                            # logging.info("ID: %s" %(id))
                             logging.info("ODO: %s" %(odo))
                             logging.info("Photo ID: %s" %(photo_id))
                             logging.info("Image URL: %s" %(i_url))
-                            logging.info("Plate Number: %s\n" %(plate))
+                            logging.info("Plate Number: %s" %(plate))
 
                             # Run OCR Process
                             extract_data(id, odo, photo_id, i_url, plate)
@@ -486,7 +487,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                 logging.info("Result:")
                 logging.info('Plate input: {}'.format(plate))
                 logging.info('Plate result: {}'.format(extract_line_plate))
-                logging.info('Plate status: {}'.format(plate_matched))
+                logging.info('Plate status: {}\n\n'.format(plate_matched))
                 plate_json = False
                 plate_matched = "not matched"
             print('*************************************\n')
@@ -500,11 +501,11 @@ def extract_data(id, odo, photo_id, i_url, plate):
 
 
 if __name__ == "__main__":
-    # schedule.every(1).minutes.do(ocr_process)
-    # while True:
-    #     print("Waiting for next schedule..")
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    schedule.every(1).minutes.do(ocr_process)
+    while True:
+        print("Waiting for next schedule..")
+        schedule.run_pending()
+        time.sleep(1)
 
-    print(get_eval())
+    # print(get_eval())
     # ocr_process()
