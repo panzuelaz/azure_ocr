@@ -359,6 +359,7 @@ def ocr_process():
                                 # logging.info("Time per itteration: {}\n\n".format(elapsed_time))
                                 # elapsed_time = 0
                         else:
+                            logging.info("Link Invalid!")
                             print("Link Invalid!")
                             pass
 
