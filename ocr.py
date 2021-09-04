@@ -318,7 +318,6 @@ def ocr_process():
                     for eval_photo in get_eval_photo(id):
                         photo_id = eval_photo[1]
                         i_url = eval_photo[2]
-
                         for vehicle_plate in get_vehicle_plate(id):
                             plate = vehicle_plate[0]
 
@@ -381,6 +380,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
     try:
         # Call API with URL and raw response (allows you to get the operation location)
         read_response = computervision_client.read(i_url,  raw=True)
+        
 
         # Get the operation location (URL with an ID at the end) from the response
         read_operation_location = read_response.headers["Operation-Location"]
@@ -409,7 +409,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                 if photo_id == 1:
                     odo_finish = True
                     for line in text_result.lines:
-                        line_str = str(line.text) # line_str can use to update raw result
+                        line_str = str(line.text)
                         # print(line_str)
                         raw_odo += line_str
                         print(raw_odo)
@@ -421,7 +421,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                         odo = odo.replace(' ','')
 
                         if extract_line_odo.isalnum() and len(extract_line_odo) >= 4:
-                            extract_line_odo = re.findall("\d+", extract_line_odo)  # extract_line_odo can use as matched result
+                            extract_line_odo = re.findall("\d+", extract_line_odo)
                             raw_extract_odo = (raw_extract_odo.join(extract_line_odo))
                             extract_odo = re.findall("\d+", odo)
                             print('Extracted alnum ODO: ', end="")
@@ -434,18 +434,18 @@ def extract_data(id, odo, photo_id, i_url, plate):
                             if count >= 3:
                                 count = 0
                                 odo_matched = "matched"
-                                odo_json = True # use this line to update database
+                                odo_json = True
                                 break
 
                 # PLATE NUMBER
                 if photo_id == 2:
                     for line in text_result.lines:
-                        line_str = str(line.text) # line_str can use to update raw result
+                        line_str = str(line.text) 
                         raw_plate += line_str
                         print(raw_plate)
                         # Remove non-alphanumeric char
                         pattern_plate = re.compile('\W')
-                        extract_line_plate = re.sub(pattern_plate, '', line_str)  # extract_line_plate can use as matched result
+                        extract_line_plate = re.sub(pattern_plate, '', line_str)
                         # print('Extracted line: ', end="")
                         # print(extract_line_plate)
                         plate = plate.replace(' ','')
@@ -465,7 +465,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                             if count >= 2:
                                 count = 0
                                 plate_matched = "matched"
-                                plate_json = True # use this line to update database
+                                plate_json = True
                                 break
 
             autoverif_log(id, raw_extract_odo, raw_odo, odo_json*1, raw_extract_plate, plate_json*1, raw_plate, odo_finish, plate_finish)
@@ -501,11 +501,11 @@ def extract_data(id, odo, photo_id, i_url, plate):
 
 
 if __name__ == "__main__":
-    schedule.every(1).minutes.do(ocr_process)
-    while True:
-        print("Waiting for next schedule..")
-        schedule.run_pending()
-        time.sleep(1)
+    # schedule.every(1).minutes.do(ocr_process)
+    # while True:
+    #     print("Waiting for next schedule..")
+    #     schedule.run_pending()
+    #     time.sleep(1)
 
     # print(get_eval())
-    # ocr_process()
+    ocr_process()
