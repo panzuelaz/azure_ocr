@@ -129,6 +129,8 @@ def get_eval():
     return:
     id, odometer, number, startDate
     """
+    print("GET EVAL BEGIN..")
+    logging.info("GET EVAL BEGIN..")
     with open('get_eval.sql', 'r') as sql_file:
         query_file = sql_file.read()
         # print(query_file)
@@ -136,7 +138,8 @@ def get_eval():
         db_cursor = connection.cursor()
         db_cursor.execute(query_file)
         myresult = db_cursor.fetchall()
-        # logging.info(myresult)
+        print("RESULT: {}".format(myresult))
+        logging.info("RESULT: {}".format(myresult))
         return myresult
 
 
@@ -365,7 +368,7 @@ def ocr_process():
 
             except ZeroDivisionError:
                 print("Delta days Zero: {}".format(delta.days))
-    return schedule.CancelJob
+    # return schedule.CancelJob
 
 
 def extract_data(id, odo, photo_id, i_url, plate):
