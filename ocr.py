@@ -42,6 +42,7 @@ import re
 import os
 import datetime
 import logging
+import requests
 import mysql.connector
 import schedule
 from dotenv import load_dotenv
@@ -105,6 +106,20 @@ def connect_mysql(host, db, user, password, port):
     except NameError as e:
         print("Error while connecting to MySQL", e)
         # logging.error("Error while connecting to MySQL", e)
+
+
+def url_check(link):
+    """
+    Check link if it's valid or invalid.
+    Link Sample: "https://s3-us-west-2.amazonaws.com/stickearn-registration/[B@c314194_[B@f6c343d_[B@d2b0432_kendaraan.jpg"
+    """
+    response = requests.get(link)
+    if response.status_code == 200:
+        # print('Web site exists')
+        return True
+    else:
+        # print('Web site does not exist')
+        return False
 
 
 def get_eval():
@@ -318,28 +333,34 @@ def ocr_process():
                     for eval_photo in get_eval_photo(id):
                         photo_id = eval_photo[1]
                         i_url = eval_photo[2]
-                        for vehicle_plate in get_vehicle_plate(id):
-                            plate = vehicle_plate[0]
 
-                            print("ID: %s" %(id))
-                            print("ODO: %s" %(odo))
-                            print("Photo ID: %s" %(photo_id))
-                            print("Image URL: %s" %(i_url))
-                            print("Plate Number: %s\n" %(plate))
-                            # logging.info("ID: %s" %(id))
-                            logging.info("ODO: %s" %(odo))
-                            logging.info("Photo ID: %s" %(photo_id))
-                            logging.info("Image URL: %s" %(i_url))
-                            logging.info("Plate Number: %s" %(plate))
+                        # Check link validation
+                        if url_check(i_url):
+                            for vehicle_plate in get_vehicle_plate(id):
+                                plate = vehicle_plate[0]
 
-                            # Run OCR Process
-                            extract_data(id, odo, photo_id, i_url, plate)
+                                print("ID: %s" %(id))
+                                print("ODO: %s" %(odo))
+                                print("Photo ID: %s" %(photo_id))
+                                print("Image URL: %s" %(i_url))
+                                print("Plate Number: %s\n" %(plate))
+                                # logging.info("ID: %s" %(id))
+                                logging.info("ODO: %s" %(odo))
+                                logging.info("Photo ID: %s" %(photo_id))
+                                logging.info("Image URL: %s" %(i_url))
+                                logging.info("Plate Number: %s" %(plate))
 
-                            # Estimate time per itteration
-                            # elapsed_time = int(time.time() - timer_start)
-                            # print("Time per itteration: {}\n\n".format(elapsed_time))
-                            # logging.info("Time per itteration: {}\n\n".format(elapsed_time))
-                            # elapsed_time = 0
+                                # Run OCR Process
+                                extract_data(id, odo, photo_id, i_url, plate)
+
+                                # Estimate time per itteration
+                                # elapsed_time = int(time.time() - timer_start)
+                                # print("Time per itteration: {}\n\n".format(elapsed_time))
+                                # logging.info("Time per itteration: {}\n\n".format(elapsed_time))
+                                # elapsed_time = 0
+                        else:
+                            print("Link Invalid!")
+                            pass
 
             except ZeroDivisionError:
                 print("Delta days Zero: {}".format(delta.days))
@@ -411,7 +432,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                     for line in text_result.lines:
                         line_str = str(line.text)
                         # print(line_str)
-                        raw_odo += line_str
+                        raw_odo += line_str.encode('ascii', 'ignore').decode('ascii')
                         print(raw_odo)
                         # Remove non-alphanumeric char
                         pattern_odo = re.compile('\W')
@@ -441,7 +462,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                 if photo_id == 2:
                     for line in text_result.lines:
                         line_str = str(line.text) 
-                        raw_plate += line_str
+                        raw_plate += line_str.encode('ascii', 'ignore').decode('ascii')
                         print(raw_plate)
                         # Remove non-alphanumeric char
                         pattern_plate = re.compile('\W')
@@ -452,6 +473,7 @@ def extract_data(id, odo, photo_id, i_url, plate):
                         plate_finish = True
 
                         if extract_line_plate.isalnum() and len(extract_line_plate) >= 4:
+                            print("LENGTH >>> {}".format(len(extract_line_plate)))
                             extract_line_plate = re.findall("\d+", extract_line_plate)
                             raw_extract_plate = (raw_extract_plate.join(extract_line_plate))
                             extract_plate = re.findall("\d+", plate)
