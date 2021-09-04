@@ -365,6 +365,7 @@ def ocr_process():
 
             except ZeroDivisionError:
                 print("Delta days Zero: {}".format(delta.days))
+    return schedule.CancelJob
 
 
 def extract_data(id, odo, photo_id, i_url, plate):
@@ -524,11 +525,11 @@ def extract_data(id, odo, photo_id, i_url, plate):
 
 
 if __name__ == "__main__":
-    # schedule.every(1).minutes.do(ocr_process)
-    # while True:
-    #     print("Waiting for next schedule..")
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    schedule.every(1).minutes.do(ocr_process)
+    while True:
+        print("Waiting for next schedule..")
+        schedule.run_pending()
+        time.sleep(1)
 
     # print(get_eval())
-    ocr_process()
+    # ocr_process()
